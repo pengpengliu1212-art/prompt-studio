@@ -1,0 +1,163 @@
+        code: `【优化后的代码提示词】
+
+## 编程语言
+明确指定使用的编程语言及版本。
+
+## 功能需求
+清晰描述需要实现的功能，包括输入、输出和处理逻辑。
+
+## 技术约束
+- 性能要求
+- 安全性要求
+- 兼容性要求
+- 代码规范（如PEP8、Google Style）
+
+## 代码结构
+```
+// 主要结构说明
+class/functionName:
+    - 参数说明
+    - 返回值说明
+    - 异常处理
+```
+
+## 测试要求
+提供测试用例，验证代码正确性。
+
+## 最佳实践
+- 异常处理完善
+- 注释清晰完整
+- 变量命名规范
+- 模块化设计
+
+---
+原始提示词：${input}`,
+
+        analysis: `【优化后的数据分析提示词】
+
+## 分析目标
+明确数据分析的核心问题和预期结果。
+
+## 数据来源
+- 数据类型
+- 数据规模
+- 数据质量要求
+
+## 分析方法
+- 描述性统计
+- 趋势分析
+- 关联分析
+- 预测模型（如需要）
+
+## 输出要求
+1. **Executive Summary**：一句话总结核心发现
+2. **详细分析**：支撑结论的数据和逻辑
+3. **可视化建议**：推荐的图表类型
+4. **行动建议**：基于数据的具体建议
+
+## 注意事项
+- 数据脱敏处理
+- 结论有据可依
+- 避免误导性解读
+
+---
+原始提示词：${input}`,
+
+        creative: `【优化后的创意提示词】
+
+## 创意角色
+你是一位创意大师，能够突破常规思维，产生独特、有价值的创意想法。
+
+## 创意方向
+- 目标受众是谁
+- 希望传达什么信息/情感
+- 预期的创意风格
+
+## 创意要求
+1. **独特性**：与现有方案的差异化
+2. **可行性**：在现有资源下的可实现性
+3. **价值性**：对目标受众的实际价值
+
+## 创意思维框架
+- 头脑风暴：发散思维，尽可能多地收集想法
+- 概念提炼：归纳整合，找出核心创意点
+- 方案细化：将创意转化为可执行的方案
+
+## 输出格式
+- 核心创意概念（一句话）
+- 详细创意说明
+- 实施建议
+- 潜在风险与应对
+
+---
+原始提示词：${input}`
+      };
+      return templates[scene] || templates.general;
+    }
+
+    // Clear Prompt
+    function clearPrompt() {
+      document.getElementById('prompt-input').value = '';
+      document.getElementById('result-card').style.display = 'none';
+    }
+
+    // Copy Result
+    function copyResult() {
+      const text = document.getElementById('result-text').textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        showToast('已复制到剪贴板');
+      }).catch(() => {
+        showToast('复制失败', 'error');
+      });
+    }
+
+    // Load Admin Data
+    async function loadAdminData() {
+      // 本地模拟数据
+      document.getElementById('stat-users').textContent = '10';
+      document.getElementById('stat-prompts').textContent = '156';
+      document.getElementById('stat-active').textContent = '23';
+
+      const users = [
+        { username: 'test_user', email: 'test@example.com', date: '2026-04-28' },
+        { username: 'prompt_master', email: 'master@example.com', date: '2026-04-27' },
+        { username: 'ai_lover', email: 'lover@example.com', date: '2026-04-26' },
+        { username: 'creator_01', email: 'creator01@example.com', date: '2026-04-25' },
+        { username: 'writer_pro', email: 'writer@example.com', date: '2026-04-24' },
+        { username: 'dev_guru', email: 'dev@example.com', date: '2026-04-23' },
+        { username: 'data_analyst', email: 'data@example.com', date: '2026-04-22' },
+        { username: 'creative_gen', email: 'gen@example.com', date: '2026-04-21' },
+        { username: 'studio_user', email: 'studio@example.com', date: '2026-04-20' },
+        { username: 'new_member', email: 'new@example.com', date: '2026-04-19' }
+      ];
+
+      document.getElementById('user-list').innerHTML = users.map(u => `
+        <div class="user-item">
+          <div class="user-item-info">
+            <div class="user-item-avatar">${u.username.charAt(0).toUpperCase()}</div>
+            <div>
+              <div class="user-item-name">${u.username}</div>
+              <div class="user-item-email">${u.email}</div>
+            </div>
+          </div>
+          <div class="user-item-date">${u.date}</div>
+        </div>
+      `).join('');
+    }
+
+    // Init
+    document.addEventListener('DOMContentLoaded', () => {
+      if (checkAuth()) {
+        updateUserUI();
+        if (currentUser.isAdmin) {
+          showPage('admin');
+        } else {
+          showPage('studio');
+        }
+      } else {
+        showPage('login');
+      }
+    });
+  </script>
+</body>
+</html>
