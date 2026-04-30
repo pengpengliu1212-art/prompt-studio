@@ -8,5 +8,12 @@
  * Restarting with stat
  * Debugger is active!
  * Debugger PIN: 128-684-666
-127.0.0.1 - - [30/Apr/2026 20:13:31] "GET /api/stats HTTP/1.1" 200 -
-127.0.0.1 - - [30/Apr/2026 20:13:38] "POST /api/admin/generate-code HTTP/1.1" 200 -
+127.0.0.1 - - [30/Apr/2026 21:25:57] "GET /api/stats HTTP/1.1" 200 -
+127.0.0.1 - - [30/Apr/2026 21:26:02] "POST /api/validate-code HTTP/1.1" 200 -
+127.0.0.1 - - [30/Apr/2026 21:26:09] "[35m[1mPOST /api/register HTTP/1.1[0m" 201 -
+127.0.0.1 - - [30/Apr/2026 21:26:19] "POST /api/login HTTP/1.1" 200 -
+127.0.0.1 - - [30/Apr/2026 21:46:58] "[33mGET /.env HTTP/1.0[0m" 404 -
+127.0.0.1 - - [30/Apr/2026 21:46:59] "[33mPOST / HTTP/1.0[0m" 404 -
+127.0.0.1 - - [30/Apr/2026 21:50:09] "[33mGET /config.local.yaml HTTP/1.0[0m" 404 -
+127.0.0.1 - - [30/Apr/2026 22:40:24] "[33mGET / HTTP/1.0[0m" 404 -
+127.0.0.1 - - [30/Apr/2026 22:40:24] "[33mGET /favicon.ico HTTP/1.0[0m" 404 -
