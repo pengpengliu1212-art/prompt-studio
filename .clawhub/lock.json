@@ -52,6 +52,10 @@
     "qwen-image": {
       "version": "1.0.0",
       "installedAt": 1774972253751
+    },
+    "ocean-evolve": {
+      "version": "1.1.0",
+      "installedAt": 1777562641741
     }
   }
 }
