@@ -1,0 +1,110 @@
+# 小说推广自动化配置
+novel:
+  title: "沧纪元"
+  author: "沧海的大鱼"
+  description: |
+    我叫刘谨，一个普通打工族，开局觉醒昊天神帝级天赋，因为火星的一场战役，形成了跟未来完全不同的过去，随着时间的推移疑点越来越多，我怎么做才能逆转未来
+  url: "https://changdunovel.com/ug/pages/book-share?share_type=11&aid=1967&book_id=7481512640926190654&encrypt_did=MDIEDJwC38MZGXjXHHqPOgQQe1OEKRuwx03lJ9mEfq42%2BwQQVofhi9QXVOX%2B4nVTm7JO7g%3D%3D&share_genre=read&user_id=43dbe15e86cec9f222c91bc3050359ab&did=04cf27f92afb4efd2c6a383cadbb1156&entrance=book_reading_share_button&zlink=https%3A%2F%2Fzlink.fqnovel.com%2FdhVGe&gd_label=click_schema_lhft_share_novelapp_android&ver=v2&source_channel=wechat&share_channel=wechat&type=book&share_timestamp=1775056985&report_params=%7B%22entrance%22%3A%22book_reading_share_button%22%2C%22type%22%3A%22book_reading%22%2C%22content_type%22%3A%22novel%22%2C%22content_id%22%3A%227562853578017079832%22%2C%22content_id_key%22%3A%22chapter_id%22%2C%22share_timestamp%22%3A%221775056985%22%7D&share_token=75ebab04-d7af-4882-85cc-bb5a60e41b31"
+  platform: "番茄免费小说"
+  genre: ["科幻", "奇幻", "穿越", "时间循环"]
+
+promotion:
+  # 推广频率
+  schedule:
+    daily:
+      - time: "09:00"
+        action: "发布早安推文"
+      - time: "12:30"
+        action: "发布午间阅读推荐"
+      - time: "19:00"
+        action: "发布晚间更新提醒"
+      - time: "21:00"
+        action: "发布睡前故事片段"
+    weekly:
+      - day: "周一"
+        action: "发布周更总结"
+      - day: "周五"
+        action: "发布周末阅读预告"
+  
+  # 推广渠道
+  channels:
+    - name: "番茄小说平台内"
+      actions: ["评论互动", "章末留言", "读者群维护"]
+    - name: "社交媒体"
+      platforms: ["微信读书圈", "QQ阅读群", "微博超话", "知乎专栏"]
+      actions: ["内容同步", "话题讨论", "读者互动"]
+  
+  # 内容策略
+  content_strategy:
+    types:
+      - "章节亮点摘录"
+      - "角色深度解析"
+      - "世界观背景介绍"
+      - "作者创作幕后"
+      - "读者互动问答"
+      - "剧情预测讨论"
+    
+    hashtags:
+      - "#沧纪元"
+      - "#沧海的大鱼"
+      - "#番茄小说"
+      - "#科幻奇幻"
+      - "#时间循环"
+      - "#昊天神帝"
+    
+    templates:
+      每日早安: "🌅 早安，书友们！新的一天开始，《沧纪元》第XX章已更新，刘谨的逆转未来之旅进行中... #沧纪元 #早安阅读"
+      章节更新: "📖 最新章更新！《沧纪元》第XX章：火星战役的真相逐渐浮出水面... #小说更新 #科幻奇幻"
+      互动问答: "💭 读者提问：如果你是刘谨，会如何逆转未来？评论区聊聊~ #读者互动 #沧纪元"
+
+automation:
+  # 工具配置
+  tools:
+    browser_automation: true
+    api_integration: false
+    data_monitoring: true
+  
+  # 执行设置
+  execution:
+    mode: "scheduled"  # scheduled / manual / triggered
+    notification: true
+    logging: true
+  
+  # 安全设置
+  safety:
+    rate_limits:
+      posts_per_day: 10
+      comments_per_hour: 30
+    content_review: true
+    emergency_stop: true
+
+monitoring:
+  # 数据监控指标
+  metrics:
+    - "阅读量增长"
+    - "评论互动数"
+    - "收藏增加"
+    - "推荐票数"
+    - "新读者增长"
+  
+  # 报告频率
+  reporting:
+    daily: true
+    weekly: true
+    monthly: true
+  
+  # 警报设置
+  alerts:
+    - condition: "24小时无新评论"
+      action: "触发互动活动"
+    - condition: "阅读量下降30%"
+      action: "调整推广策略"
+    - condition: "负面评论增加"
+      action: "作者亲自回复"
+
+# 作者偏好
+author_preferences:
+  interaction_style: "专业但亲切"
+  response_time: "24小时内"
+  special_requests: "注重科幻元素的深度解析，强调时间循环的逻辑性"
+  avoid_topics: ["剧透关键情节", "与其他作品对比"]

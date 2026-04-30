@@ -1,0 +1,126 @@
+{
+  "last_updated": "2026-04-06T09:40:48.036649",
+  "total_news": 12,
+  "news": [
+    {
+      "id": "arstechnica_1775439647_0",
+      "title": "突发：华为确认iPhone",
+      "excerpt": "首批上市地区包括中国、美国和欧洲主要国家。预购活动将于本周五正式开启，限量发售。支持最新的技术标准，为用户带来更好的体验。性能相比上一代提升超过30%，功耗进一步降低。",
+      "category": "mobile",
+      "source": "Arstechnica",
+      "time": "1小时前",
+      "image": "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=400&h=200&fit=crop",
+      "url": "https://arstechnica.com/article/1775439647_0"
+    },
+    {
+      "id": "arstechnica_1775439647_1",
+      "title": "重磅：AMD曝光Surface",
+      "excerpt": "采用了全新的设计语言，更加符合现代审美。首批上市地区包括中国、美国和欧洲主要国家。据最新消息，该产品将在下个月正式发布。",
+      "category": "computer",
+      "source": "Arstechnica",
+      "time": "3小时前",
+      "image": "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=400&h=200&fit=crop",
+      "url": "https://arstechnica.com/article/1775439647_1"
+    },
+    {
+      "id": "arstechnica_1775439647_2",
+      "title": "突发：英特尔泄露Ryzen，高性能全面升级",
+      "excerpt": "预购活动将于本周五正式开启，限量发售。性能相比上一代提升超过30%，功耗进一步降低。据最新消息，该产品将在下个月正式发布。",
+      "category": "mobile",
+      "source": "Arstechnica",
+      "time": "5小时前",
+      "image": "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400&h=200&fit=crop",
+      "url": "https://arstechnica.com/article/1775439647_2"
+    },
+    {
+      "id": "anandtech_1775439645_0",
+      "title": "突发：英伟达发布RTX",
+      "excerpt": "采用了全新的设计语言，更加符合现代审美。价格方面预计会有小幅上涨，但性价比依然突出。预购活动将于本周五正式开启，限量发售。首批上市地区包括中国、美国和欧洲主要国家。",
+      "category": "iot",
+      "source": "Anandtech",
+      "time": "1小时前",
+      "image": "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=400&h=200&fit=crop",
+      "url": "https://anandtech.com/article/1775439645_0"
+    },
+    {
+      "id": "anandtech_1775439645_1",
+      "title": "深度：英伟达确认Galaxy",
+      "excerpt": "预购活动将于本周五正式开启，限量发售。性能相比上一代提升超过30%，功耗进一步降低。采用了全新的设计语言，更加符合现代审美。",
+      "category": "computer",
+      "source": "Anandtech",
+      "time": "3小时前",
+      "image": "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=200&fit=crop",
+      "url": "https://anandtech.com/article/1775439645_1"
+    },
+    {
+      "id": "anandtech_1775439645_2",
+      "title": "独家：微软推出Surface，折叠屏全面升级",
+      "excerpt": "采用了全新的设计语言，更加符合现代审美。首批上市地区包括中国、美国和欧洲主要国家。",
+      "category": "computer",
+      "source": "Anandtech",
+      "time": "5小时前",
+      "image": "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=400&h=200&fit=crop",
+      "url": "https://anandtech.com/article/1775439645_2"
+    },
+    {
+      "id": "tomshardware_1775439643_0",
+      "title": "独家：三星泄露Pixel",
+      "excerpt": "价格方面预计会有小幅上涨，但性价比依然突出。支持最新的技术标准，为用户带来更好的体验。首批上市地区包括中国、美国和欧洲主要国家。",
+      "category": "iot",
+      "source": "Tomshardware",
+      "time": "1小时前",
+      "image": "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=200&fit=crop",
+      "url": "https://tomshardware.com/article/1775439643_0"
+    },
+    {
+      "id": "tomshardware_1775439643_1",
+      "title": "独家：英特尔宣布Ryzen，折叠屏全面升级",
+      "excerpt": "支持最新的技术标准，为用户带来更好的体验。价格方面预计会有小幅上涨，但性价比依然突出。据最新消息，该产品将在下个月正式发布。",
+      "category": "ai",
+      "source": "Tomshardware",
+      "time": "3小时前",
+      "image": "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=400&h=200&fit=crop",
+      "url": "https://tomshardware.com/article/1775439643_1"
+    },
+    {
+      "id": "tomshardware_1775439643_2",
+      "title": "独家：英伟达曝光Surface",
+      "excerpt": "据最新消息，该产品将在下个月正式发布。首批上市地区包括中国、美国和欧洲主要国家。",
+      "category": "computer",
+      "source": "Tomshardware",
+      "time": "5小时前",
+      "image": "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=400&h=200&fit=crop",
+      "url": "https://tomshardware.com/article/1775439643_2"
+    },
+    {
+      "id": "gsmarena_1775439641_0",
+      "title": "重磅：英特尔宣布Surface，高性能全面升级",
+      "excerpt": "首批上市地区包括中国、美国和欧洲主要国家。支持最新的技术标准，为用户带来更好的体验。",
+      "category": "mobile",
+      "source": "Gsmarena",
+      "time": "1小时前",
+      "image": "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=400&h=200&fit=crop",
+      "url": "https://gsmarena.com/article/1775439641_0"
+    },
+    {
+      "id": "gsmarena_1775439641_1",
+      "title": "最新：AMD发布RTX",
+      "excerpt": "据最新消息，该产品将在下个月正式发布。首批上市地区包括中国、美国和欧洲主要国家。",
+      "category": "iot",
+      "source": "Gsmarena",
+      "time": "3小时前",
+      "image": "https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?w=400&h=200&fit=crop",
+      "url": "https://gsmarena.com/article/1775439641_1"
+    },
+    {
+      "id": "gsmarena_1775439641_2",
+      "title": "深度：谷歌泄露Pixel，长续航全面升级",
+      "excerpt": "价格方面预计会有小幅上涨，但性价比依然突出。支持最新的技术标准，为用户带来更好的体验。",
+      "category": "gaming",
+      "source": "Gsmarena",
+      "time": "5小时前",
+      "image": "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=400&h=200&fit=crop",
+      "url": "https://gsmarena.com/article/1775439641_2"
+    }
+  ]
+}

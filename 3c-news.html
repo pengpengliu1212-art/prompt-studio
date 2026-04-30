@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3C数码行业实时资讯</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 0;
+            text-align: center;
+            border-radius: 0 0 20px 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+        
+        .last-update {
+            background: rgba(255,255,255,0.2);
+            padding: 8px 16px;
+            border-radius: 20px;
+            display: inline-block;
+            font-size: 0.9rem;
+        }
+        
+        .categories {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .category-btn {
+            padding: 10px 20px;
+            background: white;
+            border: 2px solid #667eea;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            color: #667eea;
+            transition: all 0.3s ease;
+        }
+        
+        .category-btn:hover,
+        .category-btn.active {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+        
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .news-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .news-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+        
+        .news-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+        
+        .news-content {
+            padding: 20px;
+        }
+        
+        .news-category {
+            display: inline-block;
+            padding: 4px 12px;
+            background: #eef2ff;
+            color: #667eea;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .news-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #2d3748;
+            line-height: 1.4;
+        }
+        
+        .news-excerpt {
+            color: #718096;
+            font-size: 0.95rem;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+        
+        .news-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+            color: #a0aec0;
+        }
+        
+        .news-source {
+            font-weight: 600;
+            color: #667eea;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #718096;
+        }
+        
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            color: #718096;
+            font-size: 0.9rem;
+            border-top: 1px solid #e2e8f0;
+            margin-top: 40px;
+        }
+        
+        .refresh-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+        
+        .refresh-btn:hover {
+            background: #5a67d8;
+            transform: rotate(180deg);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+        
+        @media (max-width: 768px) {
+            .news-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .categories {
+                gap: 10px;
+            }
+            
+            .category-btn {
+                padding: 8px 16px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>📱 3C数码行业实时资讯</h1>
+            <p class="subtitle">每日更新 | 权威来源 | 智能聚合</p>
+            <div class="last-update">最后更新: <span id="update-time">正在加载...</span></div>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="categories">
+            <button class="category-btn active" data-category="all">全部资讯</button>
+            <button class="category-btn" data-category="mobile">手机平板</button>
+            <button class="category-btn" data-category="computer">电脑硬件</button>
+            <button class="category-btn" data-category="ai">人工智能</button>
+            <button class="category-btn" data-category="iot">智能家居</button>
+            <button class="category-btn" data-category="gaming">游戏电竞</button>
+        </div>
+        
+        <div class="news-grid" id="news-container">
+            <div class="loading">
+                <div class="loading-spinner"></div>
+                <p>正在加载最新资讯...</p>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="container">
+            <p>© 2025 3C数码资讯聚合平台 | 数据来源于各大科技媒体 | 实时更新</p>
+            <p>本页面仅用于资讯展示，所有内容版权归原作者所有</p>
+        </div>
+    </footer>
+    
+    <button class="refresh-btn" id="refresh-btn">↻</button>
+    
+    <script>
+        // 模拟数据 - 在实际应用中应该从API获取
+        const mockNewsData = [
+            {
+                id: 1,
+                title: "苹果发布iPhone 16系列：AI功能全面升级",
+                excerpt: "苹果最新发布的iPhone 16系列搭载了全新的A18芯片，AI处理能力提升40%，并引入了多项AI摄影功能...",
+                category: "mobile",
+                source: "TechCrunch",
+                time: "2小时前",
+                image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400&h=200&fit=crop"
+            },
+            {
+                id: 2,
+                title: "英伟达发布新一代AI芯片，性能提升3倍",
+                excerpt: "英伟达在GTC大会上发布了新一代Blackwell架构AI芯片，专为大规模AI训练和推理设计...",
+                category: "ai",
+                source: "The Verge",
+                time: "4小时前",
+                image: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=400&h=200&fit=crop"
+            },
+            {
+                id: 3,
+                title: "微软Surface Pro 10发布：搭载骁龙X Elite",
+                excerpt: "微软最新Surface Pro 10搭载高通骁龙X Elite处理器，续航时间长达22小时，支持5G网络...",
+                category: "computer",
+                source: "CNET",
+                time: "6小时前",
+                image: "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w-400&h=200&fit=crop"
+            },
+            {
+                id: 4,
+                title: "小米智能家居生态再添新品：全屋智能控制中心",
+                excerpt: "小米发布全新智能家居控制中心，支持超过1000种智能设备，实现真正的全屋智能联动...",
+                category: "iot",
+                source: "Engadget",
+                time: "8小时前",
+                image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=200&fit=crop"
+            },
+            {
+                id: 5,
+                title: "索尼PS5 Pro规格泄露：性能大幅提升",
+                excerpt: "据内部消息，索尼正在开发PS5 Pro，GPU性能预计提升45%，支持8K游戏和增强的光线追踪...",
+                category: "gaming",
+                source: "IGN",
+                time: "10小时前",
+                image: "https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?w=400&h=200&fit=crop"
+            },
+            {
+                id: 6,
+                title: "华为鸿蒙Next正式版发布：完全脱离安卓",
+                excerpt: "华为正式发布鸿蒙Next操作系统，不再兼容安卓应用，标志着华为生态的完全独立...",
+                category: "mobile",
+                source: "华为官方",
+                time: "12小时前",
+                image: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=400&h=200&fit=crop"
+            },
+            {
+                id: 7,
+                title: "AMD锐龙9000系列处理器性能曝光",
+                excerpt: "AMD下一代锐龙9000系列处理器采用Zen 5架构，单核性能提升超过20%，功耗进一步优化...",
+                category: "computer",
+                source: "Tom's Hardware",
+                time: "14小时前",
+                image: "https://images.unsplash.com/photo-1587202372634-32705e3bf49c?w=400&h=200&fit=crop"
+            },
+            {
+                id: 8,
+                title: "OpenAI发布GPT-5：多模态能力全面升级",
+                excerpt: "OpenAI正式发布GPT-5，在推理能力、多模态理解和代码生成方面都有显著提升...",
+                category: "ai",
+                source: "OpenAI Blog",
+                time: "16小时前",
+                image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=400&h=200&fit=crop"
+            },
+            {
+                id: 9,
+                title: "三星Galaxy Z Fold 6设计图泄露",
+                excerpt: "三星下一代折叠屏手机Galaxy Z Fold 6设计图曝光，将采用更轻薄的设计和更大的外屏...",
+                category: "mobile",
+                source: "SamMobile",
+                time: "18小时前",
+                image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400&h=200&fit=crop"
+            }
+        ];
+
+        // 初始化页面
+        document.addEventListener('DOMContentLoaded', function() {
+            updateTime();
+            renderNews('all');
+            setupEventListeners();
+            
+            // 模拟实时更新
+            setInterval(updateTime, 60000); // 每分钟更新时间
+        });
+
+        function updateTime() {
+            const now = new Date();
+            const options = { 
+                year: 'numeric', 
+                month: '2-digit', 
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false
+            };
+            document.getElementById('update-time').textContent = now.toLocaleString('zh-CN', options);
+        }
+
+        function renderNews(category) {
+            const container = document.getElementById('news-container');
+            
+            // 过滤新闻
+            let filteredNews = mockNewsData;
+            if (category !== 'all') {
+                filteredNews = mockNewsData.filter(news => news.category === category);
+            }
+            
+            // 清空容器
+            container.innerHTML = '';
+            
+            // 渲染新闻卡片
+            filteredNews.forEach(news => {
+                const card = document.createElement('div');
+                card.className = 'news-card';
+                card.innerHTML = `
+                    <img src="${news.image}" alt="${news.title}" class="news-image">
+                    <div class="news-content">
+                        <span class="news-category">${getCategoryName(news.category)}</span>
+                        <h3 class="news-title">${news.title}</h3>
+                        <p class="news-excerpt">${news.excerpt}</p>
+                        <div class="news-meta">
+                            <span class="news-source">${news.source}</span>
+                            <span>${news.time}</span>
+                        </div>
+                    </div>
+                `;
+                
+                // 添加点击事件（在实际应用中会跳转到详细页面）
+                card.addEventListener('click', function() {
+                    alert(`查看详细: ${news.title}\n\n在实际应用中，这里会跳转到新闻详情页或原文链接。`);
+                });
+                
+                container.appendChild(card);
+            });
+            
+            // 如果没有新闻
+            if (filteredNews.length === 0) {
+                container.innerHTML = `
+                    <div class="loading">
+                        <p>暂无该分类的资讯</p>
+                    </div>
+                `;
+            }
+        }
+
+        function getCategoryName(category) {
+            const categories = {
+                'all': '全部',
+                'mobile': '手机平板',
+                'computer': '电脑硬件',
+                'ai': '人工智能',
+                'iot': '智能家居',
+                'gaming': '游戏电竞'
+            };
+            return categories[category] || category;
+        }
+
+        function setupEventListeners() {
+            // 分类按钮点击事件
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // 移除所有按钮的active类
+                    document.querySelectorAll('.category-btn').forEach(b => {
+                        b.classList.remove('active');
+                    });
+                    
+                    // 给当前按钮添加active类
+                    this.classList.add('active');
+                    
+                    // 渲染对应分类的新闻
+                    const category = this.getAttribute('data-category');
+                    renderNews(category);
+                });
+            });
+            
+            // 刷新按钮点击事件
+            document.getElementById('refresh-btn').addEventListener('click', function() {
+                // 添加旋转动画
+                this.style.transform = 'rotate(360deg)';
+                
+                // 模拟加载
+                const container = document.getElementById('news-container');
+                container.innerHTML = `
+                    <div class="loading">
+                        <div class="loading-spinner"></div>
+                        <p>正在刷新资讯...</p>
+                    </div>
+                `;
+                
+                // 在实际应用中，这里应该调用API获取最新数据
+                setTimeout(() => {
+                    const activeCategory = document.querySelector('.category-btn.active').getAttribute('data-category');
+                    renderNews(activeCategory);
+                    updateTime();
+                    
+                    // 重置按钮旋转
+                    this.style.transform = 'rotate(0deg)';
+                    
+                    // 显示刷新成功提示
+                    showNotification('资讯已刷新！');
+                }, 1500);
+            });
+        }
+
+        function showNotification(message) {
+            // 创建通知元素
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #48bb78;
+                color: white;
+                padding: 12px 24px;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                z-index: 1001;
+                animation: slideIn 0.3s ease;
+            `;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            // 3秒后移除
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+        }
+
+        // 添加动画关键帧
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+            
+            @keyframes slideOut {
+                from {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+                to {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // 模拟实时数据更新（在实际应用中应该使用WebSocket或轮询API）
+        setInterval(() => {
+            // 每5分钟检查一次是否有新数据
+            // 在实际应用中，这里应该调用API检查更新
+            console.log('检查数据更新...');
+        }, 300000);
+    </script>
+</body>
+</html>

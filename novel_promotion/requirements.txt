@@ -1,0 +1,12 @@
+# 《沧纪元》小说自动化宣发系统 - Python依赖
+# 基础运行环境要求：Python 3.8+
+
+PyYAML>=6.0
+requests>=2.28.0
+
+# 可选：浏览器自动化增强依赖
+# selenium>=4.0.0  # 如果需要完整的浏览器自动化
+# beautifulsoup4>=4.11.0  # 如果需要HTML解析
+# webdriver-manager>=3.8.0  # 自动管理浏览器驱动
+
+# 注意：agent-browser需要单独安装，详见 setup_guide.md

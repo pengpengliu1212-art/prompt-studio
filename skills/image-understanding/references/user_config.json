@@ -1,0 +1,16 @@
+{
+  "skills": {
+    "image_understanding": {
+      "enabled": true,
+      "name": "图片理解",
+      "description": "识别图片中的文字并分析内容",
+      "command": "python /home/ubuntu/lobster_image_skill_simple.py",
+      "patterns": [
+        "识别图片",
+        "图片文字",
+        "分析图片",
+        "图片内容"
+      ]
+    }
+  }
+}

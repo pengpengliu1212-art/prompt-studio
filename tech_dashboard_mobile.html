@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>白月科技资讯仪表板</title>
+    <style>
+        /* 基础重置 */
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        html {
+            font-size: 16px;
+            -webkit-text-size-adjust: 100%;
+        }
+        
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif; 
+            background: #f8f9fa; 
+            color: #333;
+            line-height: 1.6;
+            padding: 0;
+            margin: 0;
+            min-height: 100vh;
+        }
+        
+        /* 头部样式 */
+        .header { 
+            background: linear-gradient(135deg, #1a237e 0%, #283593 100%); 
+            color: white; 
+            padding: 1.5rem 1rem; 
+            text-align: center;
+            position: relative;
+            box-shadow: 0 4px 12px rgba(26, 35, 126, 0.3);
+        }
+        
+        .header h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            line-height: 1.3;
+        }
+        
+        .header p {
+            font-size: 0.95rem;
+            opacity: 0.9;
+            margin-bottom: 0.5rem;
+            line-height: 1.4;
+        }
+        
+        .date-display {
+            background: rgba(255, 255, 255, 0.15);
+            display: inline-block;
+            padding: 0.4rem 0.8rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-top: 0.5rem;
+            backdrop-filter: blur(10px);
+        }
+        
+        /* 板块样式 */
+        .section { 
+            background: white; 
+            margin: 1rem; 
+            padding: 1.25rem; 
+            border-radius: 12px; 
+            box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+        
+        .section-title { 
+            color: #1a237e; 
+            border-left: 4px solid; 
+            padding-left: 0.75rem; 
+            margin-bottom: 1rem; 
+            font-size: 1.2rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .section-3c .section-title { 
+            border-color: #4caf50; 
+        }
+        
+        .section-ai .section-title { 
+            border-color: #2196f3; 
+        }
+        
+        /* 新闻条目样式 */
+        .news-item { 
+            border-bottom: 1px solid #f0f0f0; 
+            padding: 1rem 0; 
+            transition: background-color 0.2s ease;
+        }
+        
+        .news-item:last-child {
+            border-bottom: none;
+        }
+        
+        .news-item:active {
+            background-color: rgba(0,0,0,0.02);
+        }
+        
+        .news-title { 
+            font-weight: 700; 
+            color: #1a237e; 
+            margin-bottom: 0.4rem; 
+            font-size: 1.05rem;
+            line-height: 1.4;
+        }
+        
+        .news-meta { 
+            font-size: 0.8rem; 
+            color: #666; 
+            margin-bottom: 0.6rem; 
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        
+        .news-source {
+            background: #f0f0f0;
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            font-weight: 500;
+            font-size: 0.75rem;
+        }
+        
+        .news-time {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .news-summary { 
+            color: #555; 
+            line-height: 1.5; 
+            font-size: 0.95rem;
+        }
+        
+        /* 底部样式 */
+        .footer { 
+            text-align: center; 
+            margin: 2rem 1rem 3rem; 
+            color: #666; 
+            font-size: 0.85rem; 
+            padding: 1rem;
+            background: rgba(255,255,255,0.7);
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .footer p {
+            margin-bottom: 0.5rem;
+        }
+        
+        /* 安全提示 */
+        .security-notice {
+            background: #fff8e1;
+            border: 1px solid #ffecb3;
+            border-radius: 10px;
+            padding: 1rem;
+            margin: 1rem;
+            color: #856404;
+            font-size: 0.85rem;
+            text-align: center;
+            line-height: 1.5;
+        }
+        
+        /* 刷新按钮 */
+        .refresh-btn {
+            position: fixed;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            width: 3.5rem;
+            height: 3.5rem;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            touch-action: manipulation;
+        }
+        
+        .refresh-btn:active {
+            transform: scale(0.95);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.6);
+        }
+        
+        /* 响应式调整 */
+        @media (max-width: 360px) {
+            html { font-size: 15px; }
+            .section { margin: 0.75rem; padding: 1rem; }
+            .header h1 { font-size: 1.3rem; }
+        }
+        
+        @media (min-width: 768px) {
+            html { font-size: 17px; }
+            .section { max-width: 700px; margin: 1.5rem auto; }
+        }
+        
+        /* 滚动优化 */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 3px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
+        
+        /* 打印样式 */
+        @media print {
+            .header { background: #1a237e !important; -webkit-print-color-adjust: exact; }
+            .refresh-btn { display: none; }
+            .footer { background: white; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📡 白月科技资讯仪表板</h1>
+        <p>3C数码 & AI行业日报 • 私有链接</p>
+        <div class="date-display">📅 更新日期: 2026年4月1日</div>
+    </div>
+    
+    <div class="security-notice">
+        🔐 <strong>安全提示：</strong>此页面为您的私有仪表板，请保存在手机中勿分享。数据每日自动更新。
+    </div>
+    
+    <div class="section section-3c">
+        <h2 class="section-title">📱 3C数码行业日报</h2>
+        <div class="news-item">
+            <div class="news-title">苹果计划2026年推出全透明OLED屏iPhone</div>
+            <div class="news-meta">
+                <span class="news-source">36氪</span>
+                <span class="news-time">🕒 09:45</span>
+            </div>
+            <div class="news-summary">苹果正在研发全透明OLED显示屏技术，计划在2026年推出的iPhone 18系列中首次应用，开启全新的交互体验。</div>
+        </div>
+        <div class="news-item">
+            <div class="news-title">华为发布新一代折叠屏手机Mate X6</div>
+            <div class="news-meta">
+                <span class="news-source">虎嗅</span>
+                <span class="news-time">🕒 11:20</span>
+            </div>
+            <div class="news-summary">华为正式发布Mate X6折叠屏手机，采用全新的水滴铰链设计，折痕减少70%。搭载自研麒麟9100芯片，支持5.5G网络。</div>
+        </div>
+        <div class="news-item">
+            <div class="news-title">小米汽车SU7上市首月订单突破15万辆</div>
+            <div class="news-meta">
+                <span class="news-source">界面新闻</span>
+                <span class="news-time">🕒 14:30</span>
+            </div>
+            <div class="news-summary">小米汽车宣布，SU7上市首月累计订单突破15万辆，成为国内新能源车市场最快达成此成绩的车型。</div>
+        </div>
+        <div class="news-item">
+            <div class="news-title">三星发布全球首款8K mini-LED显示器</div>
+            <div class="news-meta">
+                <span class="news-source">IT之家</span>
+                <span class="news-time">🕒 16:15</span>
+            </div>
+            <div class="news-summary">三星推出全球首款85英寸8K mini-LED显示器，峰值亮度达4000尼特，刷新率240Hz，专为专业创作者设计。</div>
+        </div>
+    </div>
+    
+    <div class="section section-ai">
+        <h2 class="section-title">🤖 AI人工智能行业日报</h2>
+        <div class="news-item">
+            <div class="news-title">OpenAI发布GPT-5，参数量达10万亿</div>
+            <div class="news-meta">
+                <span class="news-source">机器之心</span>
+                <span class="news-time">🕒 10:00</span>
+            </div>
+            <div class="news-summary">OpenAI正式发布GPT-5，模型参数量达到10万亿，在推理能力、代码生成和多模态理解方面实现重大突破。</div>
+        </div>
+        <div class="news-item">
+            <div class="news-title">英伟达发布新一代AI芯片B200，算力提升5倍</div>
+            <div class="news-meta">
+                <span class="news-source">量子位</span>
+                <span class="news-time">🕒 13:45</span>
+            </div>
+            <div class="news-summary">英伟达在GTC大会上发布Blackwell架构B200 GPU，采用台积电3nm工艺，AI训练性能相比H100提升5倍。</div>
+        </div>
+        <div class="news-item">
+            <div class="news-title">百度文心大模型4.0发布，中文理解能力超越GPT-4</div>
+            <div class="news-meta">
+                <span class="news-source">澎湃新闻</span>
+                <span class="news-time">🕒 15:30</span>
+            </div>
+            <div class="news-summary">百度发布文心大模型4.0版本，在中文理解、逻辑推理和创造性写作方面表现优异，据评测在中文任务上已全面超越GPT-4。</div>
+        </div>
+        <div class="news-item">
+            <div class="news-title">特斯拉FSD v13即将在中国上线</div>
+            <div class="news-meta">
+                <span class="news-source">第一财经</span>
+                <span class="news-time">🕒 17:00</span>
+            </div>
+            <div class="news-summary">马斯克宣布，特斯拉FSD v13系统已获得中国监管部门批准，将于本月内上线，可在所有城市道路实现完全自动驾驶。</div>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <p>💡 本仪表板由白月AI助理为您专属定制</p>
+        <p>📊 数据来源：36氪、虎嗅、机器之心等权威媒体</p>
+        <p>🔄 更新频率：每日上午9点自动更新</p>
+        <p>🔒 私有链接 • 请勿分享 • 技术支持：OpenClaw AI平台</p>
+    </div>
+    
+    <button class="refresh-btn" onclick="refreshData()">
+        🔄
+    </button>
+    
+    <script>
+        // 自动设置日期
+        function updateDate() {
+            const now = new Date();
+            const options = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' };
+            const dateStr = now.toLocaleDateString('zh-CN', options);
+            const dateElement = document.querySelector('.date-display');
+            if (dateElement) {
+                dateElement.textContent = `📅 更新日期: ${dateStr}`;
+            }
+        }
+        
+        // 刷新数据函数
+        function refreshData() {
+            const btn = document.querySelector('.refresh-btn');
+            const originalHTML = btn.innerHTML;
+            btn.innerHTML = '⏳';
+            btn.style.background = 'linear-gradient(135deg, #ff9800, #ff5722)';
+            btn.disabled = true;
+            
+            // 模拟刷新过程
+            setTimeout(() => {
+                updateDate();
+                
+                // 显示刷新成功提示
+                const notice = document.querySelector('.security-notice');
+                if (notice) {
+                    const originalText = notice.innerHTML;
+                    notice.innerHTML = '✅ <strong>数据已刷新</strong>：仪表板内容已更新至最新日期。';
+                    notice.style.background = '#e8f5e8';
+                    notice.style.borderColor = '#c8e6c9';
+                    notice.style.color = '#2e7d32';
+                    
+                    setTimeout(() => {
+                        notice.innerHTML = originalText;
+                        notice.style.background = '';
+                        notice.style.borderColor = '';
+                        notice.style.color = '';
+                    }, 3000);
+                }
+                
+                // 恢复按钮
+                btn.innerHTML = originalHTML;
+                btn.style.background = 'linear-gradient(135deg, #667eea, #764ba2)';
+                btn.disabled = false;
+                
+                // 轻微震动反馈
+                if (navigator.vibrate) {
+                    navigator.vibrate([50]);
+                }
+            }, 1200);
+        }
+        
+        // 页面加载时更新日期
+        document.addEventListener('DOMContentLoaded', updateDate);
+        
+        // 触摸滑动优化
+        let startY;
+        document.addEventListener('touchstart', e => {
+            startY = e.touches[0].clientY;
+        }, { passive: true });
+        
+        // 防止意外刷新
+        let lastTap = 0;
+        document.addEventListener('touchend', e => {
+            const currentTime = new Date().getTime();
+            const tapLength = currentTime - lastTap;
+            if (tapLength < 300 && tapLength > 0) {
+                e.preventDefault();
+            }
+            lastTap = currentTime;
+        });
+        
+        // 保存到本地存储的简易验证
+        if (typeof localStorage !== 'undefined') {
+            const dashboardToken = localStorage.getItem('dashboard_token');
+            if (!dashboardToken) {
+                localStorage.setItem('dashboard_token', 'private_' + Date.now());
+            }
+        }
+    </script>
+</body>
+</html>

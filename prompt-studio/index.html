@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Prompt Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    :root {
+      --glass-bg: rgba(255,255,255,0.15);
+      --glass-border: rgba(255,255,255,0.25);
+      --text-primary: #ffffff;
+      --text-secondary: rgba(255,255,255,0.7);
+      --accent: #007AFF;
+      --accent-light: #5AC8FA;
+      --success: #34C759;
+      --danger: #FF3B30;
+      --gradient-1: #667EEA;
+      --gradient-2: #764BA2;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      color: var(--text-primary);
+      overflow-x: hidden;
+    }
+    .bg-animation { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+    .orb { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.5; animation: float 20s ease-in-out infinite; }
+    .orb-1 { width: 400px; height: 400px; background: linear-gradient(135deg, var(--gradient-1), #F093FB); top: -100px; left: -100px; }
+    .orb-2 { width: 300px; height: 300px; background: linear-gradient(135deg, var(--gradient-2), var(--accent)); top: 50%; right: -50px; animation-delay: -5s; }
+    .orb-3 { width: 350px; height: 350px; background: linear-gradient(135deg, var(--accent-light), var(--gradient-1)); bottom: -100px; left: 30%; animation-delay: -10s; }
+    @keyframes float {
+      0%,100% { transform: translate(0,0) scale(1); }
+      25% { transform: translate(50px,50px) scale(1.1); }
+      50% { transform: translate(0,100px) scale(0.9); }
+      75% { transform: translate(-50px,50px) scale(1.05); }
+    }
+    .glass { background: var(--glass-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--glass-border); border-radius: 24px; box-shadow: 0 8px 32px rgba(0,0,0,0.15); }
+    .container { position: relative; z-index: 1; min-height: 100vh; display: flex; flex-direction: column; }
+    .header { padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; }
+    .logo { font-size: 24px; font-weight: 700; background: linear-gradient(135deg, var(--text-primary), var(--accent-light)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; cursor: pointer; }
+    .user-info { display: flex; align-items: center; gap: 12px; }
+    .user-avatar { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--accent-light)); display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 16px; }
+    .user-name { font-weight: 500; font-size: 15px; }
+    .btn { padding: 12px 24px; border: none; border-radius: 12px; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+    .btn-primary { background: linear-gradient(135deg, var(--accent), var(--accent-light)); color: white; box-shadow: 0 4px 15px rgba(0,122,255,0.4); }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,122,255,0.5); }
+    .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+    .btn-secondary { background: var(--glass-bg); color: white; border: 1px solid var(--glass-border); backdrop-filter: blur(10px); }
+    .btn-secondary:hover { background: rgba(255,255,255,0.25); }
+    .btn-small { padding: 8px 16px; font-size: 13px; }
+    .page { display: none; flex: 1; padding: 24px; animation: fadeIn 0.3s ease; }
+    .page.active { display: flex; flex-direction: column; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    .auth-container { flex: 1; display: flex; align-items: center; justify-content: center; padding: 24px; }
+    .auth-card { width: 100%; max-width: 400px; padding: 40px 32px; }
+    .auth-title { font-size: 28px; font-weight: 700; text-align: center; margin-bottom: 8px; }
+    .auth-subtitle { font-size: 15px; color: var(--text-secondary); text-align: center; margin-bottom: 32px; }
+    .form-group { margin-bottom: 20px; }
+    .form-label { display: block; font-size: 13px; font-weight: 600; color: var(--text-secondary); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .form-input { width: 100%; padding: 16px 20px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 14px; font-size: 16px; color: white; outline: none; transition: all 0.3s ease; }
+    .form-input:focus { background: rgba(255,255,255,0.15); border-color: var(--accent); box-shadow: 0 0 0 3px rgba(0,122,255,0.2); }
+    .form-input::placeholder { color: rgba(255,255,255,0.5); }
+    .form-hint { font-size: 12px; color: var(--text-secondary); margin-top: 6px; }
+    .form-hint.code { color: var(--accent-light); font-weight: 600; }
+    .auth-btn { width: 100%; margin-top: 8px; padding: 16px; font-size: 17px; }
+    .auth-footer { text-align: center; margin-top: 24px; font-size: 14px; color: var(--text-secondary); }
+    .auth-footer a { color: var(--accent-light); text-decoration: none; font-weight: 600; }
+    .success-icon { width: 100px; height: 100px; margin: 40px auto 24px; background: linear-gradient(135deg, var(--success), #30D158); border-radius: 50%; display: flex; align-items: center; justify-content: center; animation: scaleIn 0.5s ease; }
+    .success-icon svg { width: 50px; height: 50px; stroke: white; stroke-width: 3; fill: none; }
+    @keyframes scaleIn { from { transform: scale(0); } to { transform: scale(1); } }
+    .success-title { font-size: 24px; font-weight: 700; text-align: center; margin-bottom: 12px; }
+    .success-message { font-size: 15px; color: var(--text-secondary); text-align: center; margin-bottom: 40px; line-height: 1.6; }
+    .main-content { flex: 1; max-width: 900px; margin: 0 auto; width: 100%; }
+    .studio-header { text-align: center; margin-bottom: 32px; }
+    .studio-title { font-size: 32px; font-weight: 700; margin-bottom: 8px; }
+    .studio-subtitle { font-size: 15px; color: var(--text-secondary); }
+    .prompt-card { padding: 28px; margin-bottom: 24px; }
+    .prompt-textarea { width: 100%; min-height: 160px; padding: 20px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; font-size: 15px; line-height: 1.6; color: white; resize: vertical; outline: none; font-family: inherit; }
+    .prompt-textarea:focus { border-color: var(--accent); }
+    .prompt-actions { display: flex; gap: 12px; margin-top: 20px; flex-wrap: wrap; }
+    .scene-tags { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
+    .scene-tag { padding: 10px 18px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15); border-radius: 20px; font-size: 14px; color: var(--text-secondary); cursor: pointer; transition: all 0.3s ease; }
+    .scene-tag:hover, .scene-tag.active { background: linear-gradient(135deg, var(--accent), var(--accent-light)); color: white; border-color: transparent; }
+    .result-card { padding: 28px; margin-top: 24px; }
+    .result-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+    .result-title { font-size: 15px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; }
+    .copy-btn { padding: 8px 16px; font-size: 13px; }
+    .result-text { font-size: 15px; line-height: 1.8; white-space: pre-wrap; word-break: break-word; }
+    .admin-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 32px; }
+    .stat-card { padding: 20px; text-align: center; }
+    .stat-value { font-size: 38px; font-weight: 700; background: linear-gradient(135deg, var(--accent), var(--accent-light)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .stat-label { font-size: 14px; color: var(--text-secondary); margin-top: 8px; }
+    .admin-section { padding: 28px; margin-bottom: 24px; }
+    .admin-section-title { font-size: 18px; font-weight: 600; margin-bottom: 20px; }
+    .code-gen-row { display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; align-items: center; }
+    .code-gen-row .form-input { width: 120px; margin-bottom: 0; }
+    .code-list { display: flex; flex-direction: column; gap: 10px; max-height: 400px; overflow-y: auto; }
+    .code-item { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; background: rgba(0,0,0,0.2); border-radius: 12px; gap: 12px; }
+    .code-item.used { opacity: 0.5; }
+    .code-value { font-family: monospace; font-size: 15px; font-weight: 600; letter-spacing: 1px; color: var(--accent-light); }
+    .code-meta { font-size: 12px; color: var(--text-secondary); flex: 1; margin-left: 12px; }
+    .code-actions { display: flex; gap: 8px; }
+    .user-list { display: flex; flex-direction: column; gap: 10px; max-height: 300px; overflow-y: auto; }
+    .user-item { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; background: rgba(0,0,0,0.2); border-radius: 12px; }
+    .user-item-info { display: flex; align-items: center; gap: 12px; }
+    .user-item-avatar { width: 40px; height: 40px; border-radius: 10px; background: linear-gradient(135deg, var(--gradient-1), var(--gradient-2)); display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 14px; }
+    .user-item-name { font-weight: 600; font-size: 14px; }
+    .user-item-email { font-size: 12px; color: var(--text-secondary); }
+    .user-item-date { font-size: 12px; color: var(--text-secondary); }
+    .badge { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; text-transform: uppercase; }
+    .badge-admin { background: linear-gradient(135deg, var(--danger), #FF6B6B); }
+    .badge-active { background: linear-gradient(135deg, var(--success), #30D158); }
+    .badge-inactive { background: rgba(255,255,255,0.15); }
+    .toast { position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%) translateY(100px); padding: 16px 28px; border-radius: 14px; font-size: 15px; font-weight: 500; z-index: 1000; opacity: 0; transition: all 0.3s ease; }
+    .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+    .toast.success { background: linear-gradient(135deg, var(--success), #30D158); color: white; }
+    .toast.error { background: linear-gradient(135deg, var(--danger), #FF6B6B); color: white; }
+    .loading { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 999; align-items: center; justify-content: center; }
+    .loading.active { display: flex; }
+    .spinner { width: 40px; height: 40px; border: 3px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .tab-nav { display: flex; gap: 4px; background: rgba(0,0,0,0.2); border-radius: 12px; padding: 4px; margin-bottom: 24px; }
+    .tab-item { flex: 1; padding: 10px 16px; text-align: center; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; color: var(--text-secondary); }
+    .tab-item.active { background: linear-gradient(135deg, var(--accent), var(--accent-light)); color: white; }
+    @media (max-width: 768px) {
+      .header { padding: 16px 20px; }
+      .logo { font-size: 20px; }
+      .page { padding: 20px; }
+      .auth-card { padding: 32px 24px; }
+      .auth-title { font-size: 24px; }
+      .studio-title { font-size: 26px; }
+      .admin-grid { grid-template-columns: repeat(2, 1fr); }
+      .code-item { flex-wrap: wrap; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-animation">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+  <div class="loading" id="loading"><div class="spinner"></div></div>
+  <div class="toast" id="toast"></div>
+  <div class="container" id="app">
+    <div class="page active" id="page-login">
+      <div class="auth-container">
+        <div class="auth-card glass">
+          <h1 class="auth-title">欢迎回来</h1>
+          <p class="auth-subtitle">登录到 Prompt Studio</p>
+          <form id="login-form">
+            <div class="form-group">
+              <label class="form-label">用户名</label>
+              <input type="text" class="form-input" id="login-username" placeholder="输入用户名" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">密码</label>
+              <input type="password" class="form-input" id="login-password" placeholder="输入密码" required>
+            </div>
+            <button type="submit" class="btn btn-primary auth-btn">登录</button>
+          </form>
+          <div class="auth-footer">还没有账号？<a href="#" onclick="showPage('register')">立即注册</a></div>
+        </div>
+      </div>
+    </div>
+    <div class="page" id="page-register">
+      <div class="auth-container">
+        <div class="auth-card glass">
+          <h1 class="auth-title">创建账号</h1>
+          <p class="auth-subtitle">输入兑换码解锁使用权限</p>
+          <form id="register-form">
+            <div class="form-group">
+              <label class="form-label">兑换码</label>
+              <input type="text" class="form-input" id="reg-code" placeholder="输入兑换码" required style="text-transform: uppercase;">
+              <div class="form-hint code">向管理员索取兑换码</div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">用户名</label>
+              <input type="text" class="form-input" id="reg-username" placeholder="设置用户名" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">邮箱</label>
+              <input type="email" class="form-input" id="reg-email" placeholder="输入邮箱地址" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">密码</label>
+              <input type="password" class="form-input" id="reg-password" placeholder="设置密码（至少6位）" required minlength="6">
+            </div>
+            <button type="submit" class="btn btn-primary auth-btn">注册</button>
+          </form>
+          <div class="auth-footer">已有账号？<a href="#" onclick="showPage('login')">立即登录</a></div>
+        </div>
+      </div>
+    </div>
+    <div class="page" id="page-success">
+      <div class="auth-container">
+        <div class="auth-card glass">
+          <div class="success-icon">
+            <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          </div>
+          <h2 class="success-title">注册成功！</h2>
+          <p class="success-message">欢迎加入 Prompt Studio<br>账号已激活，现在可以登录了</p>
+          <button class="btn btn-primary auth-btn" onclick="showPage('login')">立即登录</button>
+        </div>
+      </div>
+    </div>
+    <div class="page" id="page-studio">
+      <div class="header">
+        <div class="logo" onclick="showPage('studio')">Prompt Studio</div>
+        <div class="user-info">
+          <span class="user-name" id="user-display-name">User</span>
+          <div class="user-avatar" id="user-avatar">U</div>
+        </div>
+      </div>
+      <div class="main-content">
+        <div class="studio-header">
+          <h1 class="studio-title">提示词优化工作室</h1>
+          <p class="studio-subtitle">输入你的原始提示词，AI 将为你优化</p>
+        </div>
+        <div class="prompt-card glass">
+          <div class="form-group">
+            <label class="form-label">选择场景</label>
+            <div class="scene-tags">
+              <span class="scene-tag active" data-scene="general">通用优化</span>
+              <span class="scene-tag" data-scene="writing">文案写作</span>
+              <span class="scene-tag" data-scene="code">代码生成</span>
+              <span class="scene-tag" data-scene="analysis">数据分析</span>
+              <span class="scene-tag" data-scene="creative">创意灵感</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">输入你的提示词</label>
+            <textarea class="prompt-textarea" id="prompt-input" placeholder="输入你想要优化的提示词..."></textarea>
+          </div>
+          <div class="prompt-actions">
+            <button class="btn btn-primary" id="optimize-btn" onclick="optimizePrompt()">优化</button>
+            <button class="btn btn-secondary" onclick="clearPrompt()">清空</button>
+          </div>
+        </div>
+        <div class="result-card glass" id="result-card" style="display: none;">
+          <div class="result-header">
+            <span class="result-title">优化结果</span>
+            <button class="btn btn-secondary copy-btn" onclick="copyResult()">复制</button>
+          </div>
+          <div class="result-text" id="result-text"></div>
+        </div>
+      </div>
+    </div>
+    <div class="page" id="page-admin">
+      <div class="header">
+        <div class="logo">后台管理</div>
+        <div class="user-info">
+          <span class="user-name" id="admin-name">管理员</span>
+          <div class="user-avatar" style="background: linear-gradient(135deg, #FF6B6B, #FF8E53);">A</div>
+        </div>
+      </div>
+      <div class="main-content">
+        <div class="admin-grid">
+          <div class="stat-card glass"><div class="stat-value" id="stat-users">-</div><div class="stat-label">注册用户</div></div>
+          <div class="stat-card glass"><div class="stat-value" id="stat-activated">-</div><div class="stat-label">已激活</div></div>
+          <div class="stat-card glass"><div class="stat-value" id="stat-codes">-</div><div class="stat-label">兑换码总数</div></div>
+          <div class="stat-card glass"><div class="stat-value" id="stat-codes-used">-</div><div class="stat-label">已使用</div></div>
+        </div>
+        <div class="tab-nav">
+          <div class="tab-item active" data-tab="codes" onclick="switchAdminTab('codes')">兑换码管理</div>
+          <div class="tab-item" data-tab="users" onclick="switchAdminTab('users')">用户列表</div>
+        </div>
+        <div class="admin-tab-content" id="tab-codes">
+          <div class="admin-section glass">
+            <h3 class="admin-section-title">生成兑换码</h3>
+            <div class="code-gen-row">
+              <input type="number" class="form-input" id="gen-count" placeholder="数量" value="5" min="1" max="50">
+              <button class="btn btn-primary" onclick="generateCodes()">生成</button>
+            </div>
+            <div class="code-list" id="code-list"></div>
+          </div>
+        </div>
+        <div class="admin-tab-content" id="tab-users" style="display: none;">
+          <div class="admin-section glass">
+            <h3 class="admin-section-title">用户列表</h3>
+            <div class="user-list" id="user-list"></div>
+          </div>
+        </div>
+        <div style="text-align: center; margin-top: 20px;">
+          <button class="btn btn-secondary" onclick="logout()">退出登录</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    const API_BASE = 'http://42.192.217.224:5001/api';
+    let currentUser = null;
+    const sceneTemplates = {
+      general: '请优化以下提示词，使其更加清晰、具体、有效：\n\n',
+      writing: '请作为专业文案师，优化以下写作提示词：\n\n',
+      code: '请作为资深程序员，优化以下代码生成提示词：\n\n',
+      analysis: '请作为数据分析专家，优化以下分析提示词：\n\n',
+      creative: '请作为创意大师，优化以下创意提示词：\n\n'
+    };
+    function showPage(pageId) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.getElementById('page-' + pageId).classList.add('active');
+      if (pageId === 'admin') loadAdminData();
+    }
+    function switchAdminTab(tab) {
+      document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+      document.querySelector('.tab-item[data-tab="' + tab + '"]').classList.add('active');
+      document.getElementById('tab-codes').style.display = tab === 'codes' ? 'block' : 'none';
+      document.getElementById('tab-users').style.display = tab === 'users' ? 'block' : 'none';
+    }
+    function showToast(message, type) {
+      type = type || 'success';
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.className = 'toast ' + type + ' show';
+      setTimeout(function() { toast.classList.remove('show'); }, 3000);
+    }
+    function setLoading(show) { document.getElementById('loading').classList.toggle('active', show); }
+    function checkAuth() {
+      const token = localStorage.getItem('token');
+      const user = localStorage.getItem('user');
+      if (token && user) { currentUser = JSON.parse(user); return true; }
+      return false;
+    }
+    document.getElementById('login-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const username = document.getElementById('login-username').value.trim();
+      const password = document.getElementById('login-password').value;
+      setLoading(true);
+      try {
+        const res = await fetch(API_BASE + '/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: username, password: password }) });
+        const data = await res.json();
+        if (res.ok) {
+          localStorage.setItem('token', data.token);
+          localStorage.setItem('user', JSON.stringify(data.user));
+          currentUser = data.user;
+          updateUserUI();
+          showPage(data.user.is_admin ? 'admin' : 'studio');
+          showToast('登录成功！');
+        } else { showToast(data.error || '登录失败', 'error'); }
+      } catch(err) { showToast('网络错误，请检查服务器', 'error'); }
+      setLoading(false);
+    });
+    document.getElementById('register-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const redeem_code = document.getElementById('reg-code').value.trim().toUpperCase();
+      const username = document.getElementById('reg-username').value.trim();
+      const email = document.getElementById('reg-email').value.trim();
+      const password = document.getElementById('reg-password').value;
+      if (!redeem_code) { showToast('请输入兑换码', 'error'); return; }
+      if (password.length < 6) { showToast('密码至少6位', 'error'); return; }
+      setLoading(true);
+      try {
+        const res = await fetch(API_BASE + '/register', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: username, email: email, password: password, redeem_code: redeem_code }) });
+        const data = await res.json();
+        if (res.ok) { showPage('success'); showToast('注册成功！'); }
+        else { showToast(data.error || '注册失败', 'error'); }
+      } catch(err) { showToast('网络错误，请检查服务器', 'error'); }
+      setLoading(false);
+    });
+    function logout() { localStorage.removeItem('token'); localStorage.removeItem('user'); currentUser = null; showPage('login'); showToast('已退出登录'); }
+    function updateUserUI() {
+      if (currentUser) {
+        document.getElementById('user-display-name').textContent = currentUser.username;
+        document.getElementById('user-avatar').textContent = currentUser.username.charAt(0).toUpperCase();
+        if (currentUser.is_admin) document.getElementById('admin-name').textContent = currentUser.username;
+      }
+    }
+    document.querySelectorAll('.scene-tag').forEach(function(tag) {
+      tag.addEventListener('click', function() {
+        document.querySelectorAll('.scene-tag').forEach(function(t) { t.classList.remove('active'); });
+        tag.classList.add('active');
+      });
+    });
+    function optimizePrompt() {
+      var input = document.getElementById('prompt-input').value.trim();
+      if (!input) { showToast('请输入提示词', 'error'); return; }
+      var resultCard = document.getElementById('result-card');
+      var resultText = document.getElementById('result-text');
+      var btn = document.getElementById('optimize-btn');
+      btn.disabled = true; btn.textContent = '优化中...';
+      setTimeout(function() {
+        var scene = document.querySelector('.scene-tag.active').dataset.scene;
+        resultText.textContent = sceneTemplates[scene] + input + '\n\n---\n\n【优化后的提示词框架】\n\n1. 明确角色：定义AI扮演的角色身份\n2. 具体任务：清晰说明需要完成什么\n3. 输出要求：指定格式、风格、长度等\n4. 约束条件：说明边界和限制\n5. 示例参考：提供参考案例（如有）';
+        resultCard.style.display = 'block';
+        btn.disabled = false; btn.textContent = '优化';
+        showToast('优化完成！');
+      }, 1500);
+    }
+    function clearPrompt() { document.getElementById('prompt-input').value = ''; document.getElementById('result-card').style.display = 'none'; }
+    function copyResult() { navigator.clipboard.writeText(document.getElementById('result-text').textContent).then(function() { showToast('已复制！'); }); }
+    async function loadAdminData() {
+      if (!currentUser || !currentUser.is_admin) return;
+      try {
+        var statsRes = await fetch(API_BASE + '/stats');
+        if (statsRes.ok) {
+          var s = await statsRes.json();
+          document.getElementById('stat-users').textContent = s.users||0;
+          document.getElementById('stat-activated').textContent = s.activated||0;
+          document.getElementById('stat-codes').textContent = s.codes||0;
+          document.getElementById('stat-codes-used').textContent = s.codes_used||0;
+        }
+        var codesRes = await fetch(API_BASE + '/admin/codes?admin_id=' + currentUser.id);
+        if (codesRes.ok) { var codes = await codesRes.json(); renderCodeList(codes); }
+        var usersRes = await fetch(API_BASE + '/users?admin_id=' + currentUser.id);
+        if (usersRes.ok) { var users = await usersRes.json(); renderUserList(users); }
+      } catch(err) { console.error(err); }
+    }
+    function renderCodeList(codes) {
+      var c = document.getElementById('code-list');
+      if (!codes || codes.length === 0) { c.innerHTML = '<div style="text-align:center;color:var(--text-secondary);padding:20px;">暂无兑换码，请先生成</div>'; return; }
+      c.innerHTML = codes.map(function(c) {
+        var usedLabel = c.used ? '<span class="badge badge-active">已用</span>' : '<span class="badge badge-inactive">未用</span>';
+        var usedBy = c.used_by ? ' \u2192 ' + c.used_by_username : '';
+        var date = c.created_at ? c.created_at.split(' ')[0] : '';
+        return '<div class="code-item' + (c.used ? ' used' : '') + '"><div class="code-value">' + c.code + '</div><div class="code-meta">' + date + usedBy + '</div>' + usedLabel + '<div class="code-actions"><button class="btn btn-secondary btn-small" onclick="toggleCode(' + c.id + ')">' + (c.is_active ? '\u7981\u7528' : '\u542f\u7528') + '</button></div></div>';
+      }).join('');
+    }
+    function renderUserList(users) {
+      var c = document.getElementById('user-list');
+      if (!users || users.length === 0) { c.innerHTML = '<div style="text-align:center;color:var(--text-secondary);padding:20px;">暂无用户</div>'; return; }
+      c.innerHTML = users.map(function(u) {
+        var adminBadge = u.is_admin ? '<span class="badge badge-admin">管理员</span>' : '';
+        var activeBadge = u.is_activated ? '<span class="badge badge-active">已激活</span>' : '<span class="badge badge-inactive">未激活</span>';
+        var date = u.created_at ? u.created_at.split(' ')[0] : '';
+        return '<div class="user-item"><div class="user-item-info"><div class="user-item-avatar">' + u.username.charAt(0).toUpperCase() + '</div><div><div class="user-item-name">' + u.username + ' ' + adminBadge + ' ' + activeBadge + '</div><div class="user-item-email">' + u.email + '</div></div></div><div class="user-item-date">' + date + '</div></div>';
+      }).join('');
+    }
+    async function generateCodes() {
+      var count = parseInt(document.getElementById('gen-count').value) || 5;
+      if (!currentUser || !currentUser.is_admin) return;
+      try {
+        var res = await fetch(API_BASE + '/admin/generate-code', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ admin_id: currentUser.id, count: count }) });
+        var data = await res.json();
+        if (res.ok) {
+          showToast('成功生成 ' + data.count + ' 个兑换码', 'success');
+          loadAdminData();
+        } else { showToast(data.error || '生成失败', 'error'); }
+      } catch(err) { showToast('网络错误', 'error'); }
+    }
+    async function toggleCode(codeId) {
+      try {
+        var res = await fetch(API_BASE + '/admin/toggle-code/' + codeId, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ admin_id: currentUser.id }) });
+        if (res.ok) { loadAdminData(); }
+      } catch(err) { console.error(err); }
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+      if (checkAuth()) { updateUserUI(); showPage(currentUser.is_admin ? 'admin' : 'studio'); }
+      else showPage('login');
+    });
+  </script>
+</body>
+</html>

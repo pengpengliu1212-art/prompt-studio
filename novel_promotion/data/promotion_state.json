@@ -1,0 +1,38 @@
+{
+  "last_promotion": null,
+  "promotion_count": 0,
+  "engagement_stats": {},
+  "scheduled_tasks": [
+    {
+      "action": "发布早安推文",
+      "scheduled_time": "2026-04-02T09:00:00",
+      "content_type": "daily_morning"
+    },
+    {
+      "action": "发布午间阅读推荐",
+      "scheduled_time": "2026-04-02T12:30:00",
+      "content_type": "chapter_update"
+    },
+    {
+      "action": "发布晚间更新提醒",
+      "scheduled_time": "2026-04-02T19:00:00",
+      "content_type": "chapter_update"
+    },
+    {
+      "action": "发布睡前故事片段",
+      "scheduled_time": "2026-04-02T21:00:00",
+      "content_type": "character_analysis"
+    },
+    {
+      "action": "发布周更总结",
+      "scheduled_time": "每周周一",
+      "content_type": "world_building"
+    },
+    {
+      "action": "发布周末阅读预告",
+      "scheduled_time": "每周周五",
+      "content_type": "reader_interaction"
+    }
+  ],
+  "content_history": []
+}

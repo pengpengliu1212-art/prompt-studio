@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light dark">
+    <title>📱 白月科技资讯仪表板 - 本地化版本</title>
+    <style>
+        /* 苹果设计系统变量 */
+        :root {
+            --system-bg: #f5f5f7;
+            --system-surface: #ffffff;
+            --system-surface-elevated: rgba(255, 255, 255, 0.7);
+            --system-border: rgba(0, 0, 0, 0.1);
+            --system-text: #1d1d1f;
+            --system-text-secondary: #86868b;
+            --system-text-tertiary: #aeaeb2;
+            --system-blue: #007aff;
+            --system-green: #34c759;
+            --system-indigo: #5856d6;
+            --system-orange: #ff9500;
+            --system-red: #ff3b30;
+            --system-radius: 12px;
+            --system-blur: saturate(180%) blur(20px);
+            --system-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+            --system-font: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --system-bg: #000000;
+                --system-surface: #1c1c1e;
+                --system-surface-elevated: rgba(28, 28, 30, 0.7);
+                --system-border: rgba(255, 255, 255, 0.1);
+                --system-text: #f5f5f7;
+                --system-text-secondary: #98989d;
+                --system-text-tertiary: #636366;
+            }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html {
+            font-size: 16px;
+        }
+
+        body {
+            font-family: var(--system-font);
+            background: var(--system-bg);
+            color: var(--system-text);
+            line-height: 1.5;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1000px;
+        }
+
+        /* 标题栏 */
+        .title-bar {
+            text-align: center;
+            padding: 30px 0;
+            margin-bottom: 20px;
+        }
+
+        .title-bar h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #1d1d1f 0%, #424245 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .title-bar p {
+            font-size: 1.1rem;
+            color: var(--system-text-secondary);
+            margin-bottom: 15px;
+        }
+
+        .date-display {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: var(--system-surface-elevated);
+            backdrop-filter: var(--system-blur);
+            border: 1px solid var(--system-border);
+            border-radius: 100px;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        /* 控制栏 */
+        .control-bar {
+            display: flex;
+            gap: 12px;
+            padding: 16px;
+            background: var(--system-surface-elevated);
+            backdrop-filter: var(--system-blur);
+            border-radius: var(--system-radius);
+            border: 1px solid var(--system-border);
+            box-shadow: var(--system-shadow);
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .control-button {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 20px;
+            background: var(--system-surface);
+            border: 1px solid var(--system-border);
+            border-radius: var(--system-radius);
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--system-text);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .control-button:hover {
+            background: var(--system-surface);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .control-button.primary {
+            background: var(--system-blue);
+            color: white;
+            border-color: var(--system-blue);
+        }
+
+        /* 资讯卡片 */
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .news-card {
+            background: var(--system-surface-elevated);
+            backdrop-filter: var(--system-blur);
+            border-radius: var(--system-radius);
+            border: 1px solid var(--system-border);
+            box-shadow: var(--system-shadow);
+            overflow: hidden;
+        }
+
+        .news-card-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--system-border);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .news-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            color: white;
+        }
+
+        .news-icon.tech {
+            background: linear-gradient(135deg, var(--system-blue), #5856d6);
+        }
+
+        .news-icon.ai {
+            background: linear-gradient(135deg, var(--system-green), #34c759);
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+
+        .card-subtitle {
+            font-size: 0.95rem;
+            color: var(--system-text-secondary);
+        }
+
+        .news-list {
+            padding: 10px 0;
+        }
+
+        .news-item {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--system-border);
+            transition: background-color 0.2s ease;
+            cursor: pointer;
+        }
+
+        .news-item:hover {
+            background: rgba(0, 122, 255, 0.05);
+        }
+
+        .news-item:last-child {
+            border-bottom: none;
+        }
+
+        .news-title {
+            font-size: 1.05rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+
+        .news-meta {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 8px;
+            font-size: 0.85rem;
+            color: var(--system-text-secondary);
+        }
+
+        .news-source {
+            background: var(--system-surface);
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-weight: 500;
+        }
+
+        .news-summary {
+            font-size: 0.95rem;
+            color: var(--system-text);
+            line-height: 1.5;
+            margin-bottom: 12px;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .news-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--system-blue);
+            text-decoration: none;
+        }
+
+        .news-link:hover {
+            color: var(--system-indigo);
+        }
+
+        /* 加载状态 */
+        .loading-state {
+            padding: 40px;
+            text-align: center;
+            color: var(--system-text-secondary);
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--system-border);
+            border-top-color: var(--system-blue);
+            border-radius: 50%;
+            margin: 0 auto 16px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* 通知 */
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            max-width: 400px;
+            padding: 16px 20px;
+            background: var(--system-surface-elevated);
+            backdrop-filter: var(--system-blur);
+            border: 1px solid var(--system-border);
+            border-radius: var(--system-radius);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            z-index: 1000;
+        }
+
+        .notification.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .notification.success {
+            border-left: 4px solid var(--system-green);
+        }
+
+        .notification.error {
+            border-left: 4px solid var(--system-red);
+        }
+
+        .notification.info {
+            border-left: 4px solid var(--system-blue);
+        }
+
+        /* 页脚 */
+        .footer {
+            text-align: center;
+            padding: 30px 0;
+            color: var(--system-text-tertiary);
+            font-size: 0.9rem;
+            border-top: 1px solid var(--system-border);
+            width: 100%;
+            max-width: 1000px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-bar">
+            <h1>📱 白月科技资讯仪表板</h1>
+            <p>3C数码 & AI行业日报 · 本地化版本</p>
+            <div class="date-display">
+                <span id="current-date">2026年4月1日 星期三</span>
+            </div>
+        </div>
+
+        <div class="control-bar">
+            <button class="control-button primary" onclick="fetchAllNews()">
+                <span>🔄</span>
+                <span>抓取最新资讯</span>
+            </button>
+            <button class="control-button" onclick="clearCache()">
+                <span>🗑️</span>
+                <span>清除缓存</span>
+            </button>
+            <button class="control-button" onclick="showSettings()">
+                <span>⚙️</span>
+                <span>设置</span>
+            </button>
+        </div>
+
+        <div class="dashboard">
+            <div class="news-card">
+                <div class="news-card-header">
+                    <div class="news-icon tech">📱</div>
+                    <div>
+                        <div class="card-title">3C数码日报</div>
+                        <div class="card-subtitle">智能手机 · 电脑硬件 · 消费电子</div>
+                    </div>
+                </div>
+                <div class="news-list" id="tech-news-list">
+                    <div class="loading-state">
+                        <div class="loading-spinner"></div>
+                        <div>点击上方按钮开始抓取资讯...</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="news-card">
+                <div class="news-card-header">
+                    <div class="news-icon ai">🤖</div>
+                    <div>
+                        <div class="card-title">AI人工智能日报</div>
+                        <div class="card-subtitle">大语言模型 · 计算机视觉 · AI芯片</div>
+                    </div>
+                </div>
+                <div class="news-list" id="ai-news-list">
+                    <div class="loading-state">
+                        <div class="loading-spinner"></div>
+                        <div>点击上方按钮开始抓取资讯...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>💡 本仪表板由白月AI助理为您专属定制 · 完全本地运行</p>
+            <p>🔒 隐私保护 · 无需外部服务器 · 自主控制数据源</p>
+            <p style="margin-top: 8px; font-size: 0.8rem;">
+                技术支持：OpenClaw AI平台 · 版本 2.0
+            </p>
+        </div>
+    </div>
+
+    <div id="notification" class="notification">
+        <div id="notification-content"></div>
+    </div>
+
+    <script>
+        // RSS源配置
+        const RSS_SOURCES = {
+            tech: [
+                { url: 'https://36kr.com/feed', name: '36氪' },
+                { url: 'https://www.huxiu.com/rss', name: '虎嗅' },
+                { url: 'https://www.ithome.com/rss', name: 'IT之家' }
+            ],
+            ai: [
+                { url: 'https://www.jiqizhixin.com/rss', name: '机器之心' },
+                { url: 'https://www.leiphone.com/feed', name: '雷峰网' }
+            ]
+        };
+
+        // CORS代理（可替换为您自己的代理）
+        const CORS_PROXY = 'https://cors-anywhere.herokuapp.com/';
+        // 备用代理列表
+        const BACKUP_PROXIES = [
+            'https://api.codetabs.com/v1/proxy?quest=',
+            'https://corsproxy.io/?',
+            ''
+        ];
+
+        // 分类关键词
+        const CATEGORY_KEYWORDS = {
+            tech: ['手机', '电脑', '硬件', '芯片', '苹果', '华为', '小米', '三星', '折叠屏', '5G', '6G', '数码', '消费电子'],
+            ai: ['AI', '人工智能', '大模型', 'GPT', '深度学习', '机器学习', '神经网络', '英伟达', 'OpenAI', '谷歌', '微软', '算法']
+        };
+
+        // 全局状态
+        let currentProxyIndex = 0;
+        let isFetching = false;
+
+        // DOM加载完成
+        document.addEventListener('DOMContentLoaded', function() {
+            updateDate();
+            loadCachedNews();
+        });
+
+        // 更新日期
+        function updateDate() {
+            const now = new Date();
+            const options = { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric', 
+                weekday: 'long',
+                hour: '2-digit',
+                minute: '2-digit'
+            };
+            const dateStr = now.toLocaleDateString('zh-CN', options);
+            document.getElementById('current-date').textContent = dateStr;
+        }
+
+        // 显示通知
+        function showNotification(message, type = 'info', duration = 3000) {
+            const notification = document.getElementById('notification');
+            const content = document.getElementById('notification-content');
+            
+            notification.className = 'notification ' + type;
+            content.textContent = message;
+            
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, duration);
+        }
+
+        // 获取所有新闻
+        async function fetchAllNews() {
+            if (isFetching) {
+                showNotification('正在抓取中，请稍候...', 'info');
+                return;
+            }
+            
+            isFetching = true;
+            showNotification('开始抓取最新资讯...', 'info');
+            
+            // 更新按钮状态
+            const button = document.querySelector('.control-button.primary');
+            const originalText = button.innerHTML;
+            button.innerHTML = '<span>⏳</span><span>抓取中...</span>';
+            button.disabled = true;
+            
+            try {
+                const [techNews, aiNews] = await Promise.all([
+                    fetchCategoryNews('tech'),
+                    fetchCategoryNews('ai')
+                ]);
+                
+                // 渲染结果
+                renderNews('tech-news-list', techNews, '3C数码');
+                renderNews('ai-news-list', aiNews, 'AI人工智能');
+                
+                // 缓存数据
+                cacheNewsData({ tech: techNews, ai: aiNews });
+                
+                showNotification(`抓取完成！共获取 ${techNews.length + aiNews.length} 篇资讯`, 'success');
+                
+            } catch (error) {
+                console.error('抓取失败:', error);
+                showNotification(`抓取失败: ${error.message}`, 'error');
+                
+                // 尝试切换代理
+                currentProxyIndex = (currentProxyIndex + 1) % BACKUP_PROXIES.length;
+                showNotification(`切换代理服务器，请重试`, 'info');
+                
+            } finally {
+                isFetching = false;
+                button.innerHTML = originalText;
+                button.disabled = false;
+            }
+        }
+
+        // 获取分类新闻
+        async function fetchCategoryNews(category) {
+            const sources = RSS_SOURCES[category];
+            const keywords = CATEGORY_KEYWORDS[category];
+            const allArticles = [];
+            
+            // 并发抓取所有RSS源
+            const fetchPromises = sources.map(source => 
+                fetchRSSFeed(source.url, source.name)
+                    .then(articles => {
+                        // 过滤和分类
+                        return articles
+                            .filter(article => containsKeywords(article, keywords))
+                            .map(article => ({
+                                ...article,
+                                category: category
+                            }));
+                    })
+                    .catch(error => {
+                        console.warn(`RSS源 ${source.name} 抓取失败:`, error);
+                        return [];
+                    })
+            );
+            
+            const results = await Promise.all(fetchPromises);
+            
+            // 合并结果并去重
+            results.forEach(articles => {
+                articles.forEach(article => {
+                    if (!allArticles.some(a => a.url === article.url)) {
+                        allArticles.push(article);
+                    }
+                });
+            });
+            
+            // 按时间排序（最新的在前）
+            return allArticles
+                .sort((a, b) => new Date(b.time) - new Date(a.time))
+                .slice(0, 10); // 每个分类最多10条
+        }
+
+        // 获取RSS源内容
+        async function fetchRSSFeed(rssUrl, sourceName) {
+            const proxy = BACKUP_PROXIES[currentProxyIndex] || '';
+            const url = proxy + rssUrl;
+            
+            try {
+                const response = await fetch(url, {
+                    headers: {
+                        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36',
+                        'Accept': 'application/xml, text/xml, */*'
+                    },
+                    timeout: 10000
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+                
+                const xmlText = await response.text();
+                return parseRSSXML(xmlText, sourceName);
+                
+            } catch (error) {
+                // 如果使用代理失败，尝试不使用代理（如果源支持CORS）
+                if (proxy && currentProxyIndex < BACKUP_PROXIES.length - 1) {
+                    console.log(`代理 ${proxy} 失败，尝试直接访问`);
+                    currentProxyIndex++;
+                    return fetchRSSFeed(rssUrl, sourceName);
+                }
+                throw error;
+            }
+        }
+
+        // 解析RSS XML
+        function parseRSSXML(xmlText, sourceName) {
+            const parser = new DOMParser();
+            const xmlDoc = parser.parseFromString(xmlText, 'text/xml');
+            
+            // 检查解析错误
+            const parserError = xmlDoc.querySelector('parsererror');
+            if (parserError) {
+                throw new Error('RSS解析失败: ' + parserError.textContent);
+            }
+            
+            // 尝试不同的RSS格式
+            let items = xmlDoc.querySelectorAll('item');
+            if (items.length === 0) {
+                items = xmlDoc.querySelectorAll('entry'); // Atom格式
+            }
+            
+            const articles = [];
+            
+            items.forEach(item => {
+                try {
+                    const title = item.querySelector('title')?.textContent?.trim() || '无标题';
+                    const link = item.querySelector('link')?.textContent?.trim() || 
+                                item.querySelector('link')?.getAttribute('href') || 
+                                '#';
+                    const description = item.querySelector('description')?.textContent?.trim() ||
+                                      item.querySelector('summary')?.textContent?.trim() ||
+                                      item.querySelector('content')?.textContent?.trim() ||
+                                      '';
+                    
+                    // 提取发布时间
+                    let pubDate = item.querySelector('pubDate')?.textContent?.trim() ||
+                                 item.querySelector('published')?.textContent?.trim() ||
+                                 item.querySelector('updated')?.textContent?.trim() ||
+                                 new Date().toISOString();
+                    
+                    // 清理描述文本
+                    const cleanDescription = description
+                        .replace(/<[^>]*>/g, '') // 移除HTML标签
+                        .replace(/\s+/g, ' ')
+                        .trim()
+                        .substring(0, 200);
+                    
+                    articles.push({
+                        title: title,
+                        source: sourceName,
+                        url: link,
+                        summary: cleanDescription || '暂无摘要',
+                        time: formatDate(pubDate)
+                    });
+                    
+                } catch (error) {
+                    console.warn('解析RSS项目失败:', error);
+                }
+            });
+            
+            return articles;
+        }
+
+        // 格式化日期
+        function formatDate(dateString) {
+            try {
+                const date = new Date(dateString);
+                if (isNaN(date.getTime())) {
+                    return new Date().toLocaleDateString('zh-CN');
+                }
+                return date.toLocaleDateString('zh-CN') + ' ' + 
+                       date.getHours().toString().padStart(2, '0') + ':' +
+                       date.getMinutes().toString().padStart(2, '0');
+            } catch {
+                return new Date().toLocaleDateString('zh-CN');
+            }
+        }
+
+        // 检查是否包含关键词
+        function containsKeywords(article, keywords) {
+            const text = (article.title + ' ' + article.summary).toLowerCase();
+            return keywords.some(keyword => 
+                keyword.toLowerCase().includes(keyword.toLowerCase()) || 
+                text.includes(keyword.toLowerCase())
+            );
+        }
+
+        // 渲染新闻列表
+        function renderNews(containerId, articles, categoryName) {
+            const container = document.getElementById(containerId);
+            
+            if (!articles || articles.length === 0) {
+                container.innerHTML = `
+                    <div class="loading-state">
+                        <div>⚠️ 未找到 ${categoryName} 相关资讯</div>
+                        <div style="font-size: 0.9rem; margin-top: 8px; color: var(--system-text-tertiary)">
+                            尝试修改关键词或检查网络连接
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+            
+            let html = '';
+            articles.forEach(article => {
+                html += `
+                    <div class="news-item" onclick="window.open('${article.url}', '_blank')">
+                        <div class="news-title">${article.title}</div>
+                        <div class="news-meta">
+                            <span class="news-source">${article.source}</span>
+                            <span>🕒 ${article.time}</span>
+                        </div>
+                        <div class="news-summary">${article.summary}</div>
+                        <a href="${article.url}" class="news-link" target="_blank" onclick="event.stopPropagation()">
+                            阅读原文 ↗
+                        </a>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+
+        // 缓存新闻数据
+        function cacheNewsData(data) {
+            try {
+                const cache = {
+                    data: data,
+                    timestamp: new Date().toISOString(),
