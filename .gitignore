@@ -1,0 +1,20 @@
+# Trash
+.openclaw/trash/
+
+# Virtual envs
+venv/
+prompt-studio-api/venv/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Local state
+.openclaw/workspace-state.json
+memory/
+inbox/
+.openclaw/memory/

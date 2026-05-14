@@ -1,7 +1,7 @@
 {
   "name": "ocean-evolve",
-  "version": "1.1.0",
-  "description": "海洋进化版 — 安全自主进化技能：AI 可主动优化自身工作方式、创建技能、调整非安全配置。每次修改必须记录，支持API密钥安全存储，绝不触碰系统红线。这是双鱼座005与先生共创的安全进化协议。",
+  "version": "2.2.0",
+  "description": "海洋进化版 v2.0 — 安全自主进化技能。AI 可主动优化自身工作方式、创建技能、调整非安全配置。采用 L0-L3 安全等级矩阵，每次修改必须记录入 memory/evolution/，绝不触碰系统红线。",
   "author": "大鱼Cyrus & 双鱼座005",
   "keywords": [
     "ocean-evolve",
